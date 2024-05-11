@@ -9,21 +9,23 @@
 /* Begin PBXBuildFile section */
 		8F2D89242BE9E7EB005F082C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89232BE9E7EB005F082C /* AppDelegate.swift */; };
 		8F2D89262BE9E7EB005F082C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89252BE9E7EB005F082C /* SceneDelegate.swift */; };
-		8F2D89282BE9E7EB005F082C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89272BE9E7EB005F082C /* ViewController.swift */; };
+		8F2D89282BE9E7EB005F082C /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89272BE9E7EB005F082C /* ImagesListViewController.swift */; };
 		8F2D892B2BE9E7EB005F082C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F2D89292BE9E7EB005F082C /* Main.storyboard */; };
 		8F2D892D2BE9E7ED005F082C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F2D892C2BE9E7ED005F082C /* Assets.xcassets */; };
 		8F2D89302BE9E7ED005F082C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F2D892E2BE9E7ED005F082C /* LaunchScreen.storyboard */; };
+		8FD11A5E2BEF4F6B00FC2640 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8F2D89202BE9E7EB005F082C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F2D89232BE9E7EB005F082C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F2D89252BE9E7EB005F082C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8F2D89272BE9E7EB005F082C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8F2D89272BE9E7EB005F082C /* ImagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListViewController.swift; sourceTree = "<group>"; };
 		8F2D892A2BE9E7EB005F082C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8F2D892C2BE9E7ED005F082C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F2D892F2BE9E7ED005F082C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F2D89312BE9E7ED005F082C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +60,8 @@
 			children = (
 				8F2D89232BE9E7EB005F082C /* AppDelegate.swift */,
 				8F2D89252BE9E7EB005F082C /* SceneDelegate.swift */,
-				8F2D89272BE9E7EB005F082C /* ViewController.swift */,
 				8F2D89292BE9E7EB005F082C /* Main.storyboard */,
+				8FD11A5C2BEF4F2F00FC2640 /* ImagesList */,
 				8F2D89372BEA0312005F082C /* Resources */,
 			);
 			path = ImageFeed;
@@ -73,6 +75,15 @@
 				8F2D89312BE9E7ED005F082C /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		8FD11A5C2BEF4F2F00FC2640 /* ImagesList */ = {
+			isa = PBXGroup;
+			children = (
+				8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */,
+				8F2D89272BE9E7EB005F082C /* ImagesListViewController.swift */,
+			);
+			path = ImagesList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,7 +157,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F2D89282BE9E7EB005F082C /* ViewController.swift in Sources */,
+				8F2D89282BE9E7EB005F082C /* ImagesListViewController.swift in Sources */,
+				8FD11A5E2BEF4F6B00FC2640 /* ImagesListCell.swift in Sources */,
 				8F2D89242BE9E7EB005F082C /* AppDelegate.swift in Sources */,
 				8F2D89262BE9E7EB005F082C /* SceneDelegate.swift in Sources */,
 			);
