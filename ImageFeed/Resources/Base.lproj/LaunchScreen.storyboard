@@ -18,14 +18,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch Screen Logo" translatesAutoresizingMaskIntoConstraints="NO" id="hgd-db-Qha" userLabel="Launch Screen Image">
-                                <rect key="frame" x="160.33333333333334" y="401" width="72.666666666666657" height="75.333333333333314"/>
+                                <rect key="frame" x="160.33333333333334" y="388.33333333333331" width="72.666666666666657" height="75.333333333333314"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="hgd-db-Qha" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Kaf-s4-11i"/>
-                            <constraint firstItem="hgd-db-Qha" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Phl-bM-Al6"/>
+                            <constraint firstItem="hgd-db-Qha" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Kaf-s4-11i"/>
+                            <constraint firstItem="hgd-db-Qha" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Phl-bM-Al6"/>
                         </constraints>
                     </view>
                 </viewController>
