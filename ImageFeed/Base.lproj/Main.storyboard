@@ -38,10 +38,10 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXG-vf-yqk" userLabel="Like Button">
-                                                    <rect key="frame" x="333" y="4" width="44" height="44"/>
+                                                    <rect key="frame" x="335" y="4" width="42" height="42"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="U1s-MO-N5j"/>
-                                                        <constraint firstAttribute="width" constant="44" id="W5w-pt-kgR"/>
+                                                        <constraint firstAttribute="height" constant="42" id="U1s-MO-N5j"/>
+                                                        <constraint firstAttribute="width" constant="42" id="W5w-pt-kgR"/>
                                                     </constraints>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="LikeOn"/>
