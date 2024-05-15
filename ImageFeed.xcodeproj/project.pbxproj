@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F0F8BCB2BF3401900308F61 /* ImagesListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0F8BCA2BF3401900308F61 /* ImagesListCellViewModel.swift */; };
 		8F2D89242BE9E7EB005F082C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89232BE9E7EB005F082C /* AppDelegate.swift */; };
 		8F2D89262BE9E7EB005F082C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89252BE9E7EB005F082C /* SceneDelegate.swift */; };
 		8F2D89282BE9E7EB005F082C /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D89272BE9E7EB005F082C /* ImagesListViewController.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F0F8BCA2BF3401900308F61 /* ImagesListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCellViewModel.swift; sourceTree = "<group>"; };
 		8F2D89202BE9E7EB005F082C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F2D89232BE9E7EB005F082C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F2D89252BE9E7EB005F082C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */,
+				8F0F8BCA2BF3401900308F61 /* ImagesListCellViewModel.swift */,
 				8F2D89272BE9E7EB005F082C /* ImagesListViewController.swift */,
 			);
 			path = ImagesList;
@@ -126,6 +129,7 @@
 			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				ru,
 				en,
 				Base,
 			);
@@ -159,6 +163,7 @@
 			files = (
 				8F2D89282BE9E7EB005F082C /* ImagesListViewController.swift in Sources */,
 				8FD11A5E2BEF4F6B00FC2640 /* ImagesListCell.swift in Sources */,
+				8F0F8BCB2BF3401900308F61 /* ImagesListCellViewModel.swift in Sources */,
 				8F2D89242BE9E7EB005F082C /* AppDelegate.swift in Sources */,
 				8F2D89262BE9E7EB005F082C /* SceneDelegate.swift in Sources */,
 			);
