@@ -8,7 +8,7 @@ final class ImagesListViewController: UIViewController {
     private let photosName = Array(0..<20).map{ "\($0)" }
     private let edges = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
     
-    // MARK: - View Life Cycles
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
