@@ -27,6 +27,13 @@ final class SingleImageViewController: UIViewController {
         imageView.image = image
         imageView.frame.size = image.size
         rescaleAndCenterImageInScrollView(image: image)
+        
+        let doubleTapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(handleDoubleTap(_:)))
+        doubleTapGesture.numberOfTapsRequired = 2
+        imageView.addGestureRecognizer(doubleTapGesture)
+        imageView.isUserInteractionEnabled = true
     }
     
     // MARK: - IB Actions
@@ -34,7 +41,7 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    @IBAction func sharingButtonDidTap() {
+    @IBAction private func sharingButtonDidTap() {
         guard let image else { return }
         let share = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(share, animated: true)
@@ -58,6 +65,13 @@ final class SingleImageViewController: UIViewController {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+    
+    @objc private func handleDoubleTap(_ sender: UITapGestureRecognizer) {
+        guard let image else { return }
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.rescaleAndCenterImageInScrollView(image: image)
+        }
     }
 }
 
