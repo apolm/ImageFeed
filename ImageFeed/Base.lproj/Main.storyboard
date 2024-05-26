@@ -231,13 +231,27 @@
                                     <action selector="backwardButtonDidTap" destination="Hje-FK-ucn" eventType="touchUpInside" id="gts-Er-BL6"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WA-xA-Yxn" userLabel="Sharing Button">
+                                <rect key="frame" x="171" y="785" width="51" height="51"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="51" id="C8r-Ov-6Je"/>
+                                    <constraint firstAttribute="height" constant="51" id="cpL-SK-vgc"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="Sharing"/>
+                                <connections>
+                                    <action selector="sharingButtonDidTap" destination="Hje-FK-ucn" eventType="touchUpInside" id="DED-jw-Wjf"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="zK3-T4-8zv"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="nrB-Td-QvP" firstAttribute="bottom" secondItem="pmL-Wg-mgY" secondAttribute="bottom" id="8F5-Hf-BRu"/>
+                            <constraint firstItem="zK3-T4-8zv" firstAttribute="bottom" secondItem="2WA-xA-Yxn" secondAttribute="bottom" constant="16" id="Cjh-IR-we7"/>
                             <constraint firstItem="nrB-Td-QvP" firstAttribute="top" secondItem="pmL-Wg-mgY" secondAttribute="top" id="Hx4-Tm-k26"/>
                             <constraint firstItem="nrB-Td-QvP" firstAttribute="leading" secondItem="zK3-T4-8zv" secondAttribute="leading" id="XNV-fN-8s9"/>
+                            <constraint firstItem="2WA-xA-Yxn" firstAttribute="centerX" secondItem="zK3-T4-8zv" secondAttribute="centerX" id="YmF-nj-pXL"/>
                             <constraint firstItem="nrB-Td-QvP" firstAttribute="trailing" secondItem="zK3-T4-8zv" secondAttribute="trailing" id="dRE-uh-Wgl"/>
                             <constraint firstItem="b2j-Ra-DuB" firstAttribute="top" secondItem="zK3-T4-8zv" secondAttribute="top" constant="8" id="h4L-P5-skl"/>
                             <constraint firstItem="b2j-Ra-DuB" firstAttribute="leading" secondItem="zK3-T4-8zv" secondAttribute="leading" constant="8" id="tYe-iI-KK3"/>
@@ -260,6 +274,7 @@
         <image name="Backward" width="24" height="24"/>
         <image name="LikeOn" width="42" height="42"/>
         <image name="Logout" width="24" height="24"/>
+        <image name="Sharing" width="51" height="51"/>
         <image name="TabEditorialActive" width="30" height="30"/>
         <image name="TabProfileActive" width="30" height="30"/>
         <namedColor name="YP Black">
