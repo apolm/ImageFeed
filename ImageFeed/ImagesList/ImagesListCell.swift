@@ -27,6 +27,7 @@ final class ImagesListCell: UITableViewCell {
         // Gradient
         cellImage.subviews.forEach { $0.removeFromSuperview() }
         
+        cellImage.layoutIfNeeded()
         let gradientContainerView = UIView(frame: cellImage.bounds)
         
         let gradient = CAGradientLayer()
@@ -36,8 +37,9 @@ final class ImagesListCell: UITableViewCell {
                                 height: 30)
         gradient.colors = [UIColor.ypBlack.withAlphaComponent(0.2).cgColor,
                            UIColor.ypBlack.withAlphaComponent(0).cgColor]
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.startPoint = CGPoint(x: 0.5, y: 1)
+        gradient.endPoint = CGPoint(x: 0.5, y: 0)
+        gradient.locations = [0.6, 0.9]
         
         gradientContainerView.layer.insertSublayer(gradient, at: 0)
         
