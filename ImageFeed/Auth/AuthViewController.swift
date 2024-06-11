@@ -19,6 +19,7 @@ final class AuthViewController: UIViewController {
         button.addTarget(self, action: #selector(Self.loginButtonDidTap), for: .touchUpInside)
         return button
     }()
+    private let oAuthService = OAuthService.shared
     private let showWebViewSegueIdentifier = "ShowWebView"
     
     // MARK: - View Life Cycle
@@ -75,12 +76,22 @@ final class AuthViewController: UIViewController {
 // MARK: - WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        //TODO:
-        print(code)
+        OAuthService.shared.fetchOAuthToken(code: code) { result in
+            switch result {
+            case .success(let token):
+                print(token)
+            case .failure(let failure):
+                switch failure {
+                case NetworkError.httpStatusCode(let code):
+                    print("Error \(code) when receiving token.")
+                default:
+                    print(failure.localizedDescription)
+                }
+            }
+        }
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
     }
 }
-

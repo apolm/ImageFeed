@@ -6,8 +6,7 @@ enum Constants {
     static let redirectURI = "urn:ietf:wg:oauth:2.0:oob"
     static let accessScope = "public+read_user+write_likes"
     static let defaultBaseURL = URL(string: "https://api.unsplash.com")!
-}
-
-enum WebViewConstants {
-    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    
+    static let authorizeURLString = "https://unsplash.com/oauth/authorize"
+    static let tokenURLString = "https://unsplash.com/oauth/token"
 }
