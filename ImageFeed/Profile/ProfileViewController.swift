@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
     private var avatarImage: UIImageView?
     private var logoutButton: UIButton?

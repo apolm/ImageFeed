@@ -1,6 +1,6 @@
 import UIKit
 
-class AuthViewController: UIViewController {
+final class AuthViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var logoImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "UnsplashLogo"))
@@ -16,7 +16,7 @@ class AuthViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(loginButtonDidTap), for: .touchUpInside)
+        button.addTarget(self, action: #selector(Self.loginButtonDidTap), for: .touchUpInside)
         return button
     }()
     private let showWebViewSegueIdentifier = "ShowWebView"
