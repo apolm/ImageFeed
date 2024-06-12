@@ -1,6 +1,9 @@
 import UIKit
 
 final class AuthViewController: UIViewController {
+    // MARK: - Public Properties
+    weak var delegate: AuthViewControllerDelegate?
+    
     // MARK: - Private Properties
     private lazy var logoImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "UnsplashLogo"))
@@ -19,7 +22,6 @@ final class AuthViewController: UIViewController {
         button.addTarget(self, action: #selector(Self.loginButtonDidTap), for: .touchUpInside)
         return button
     }()
-    private let oAuthService = OAuthService.shared
     private let showWebViewSegueIdentifier = "ShowWebView"
     
     // MARK: - View Life Cycle
@@ -36,7 +38,7 @@ final class AuthViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
             guard let viewController = segue.destination as? WebViewViewController else {
-                assertionFailure("Invalid segue destination")
+                assertionFailure("Invalid segue destination for ID: \(showWebViewSegueIdentifier)")
                 return
             }
             viewController.delegate = self
@@ -76,10 +78,13 @@ final class AuthViewController: UIViewController {
 // MARK: - WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        OAuthService.shared.fetchOAuthToken(code: code) { result in
+        vc.dismiss(animated: true)
+        
+        OAuthService.shared.fetchOAuthToken(code: code) { [weak self] result in
+            guard let self else { return }
             switch result {
-            case .success(let token):
-                print(token)
+            case .success:
+                self.delegate?.didAuthenticate(self)
             case .failure(let failure):
                 switch failure {
                 case NetworkError.httpStatusCode(let code):
@@ -89,9 +94,5 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 }
             }
         }
-    }
-    
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true)
     }
 }
