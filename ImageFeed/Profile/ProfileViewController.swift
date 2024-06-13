@@ -1,12 +1,17 @@
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
     private var avatarImage: UIImageView?
     private var logoutButton: UIButton?
     private var nameLabel: UILabel?
     private var loginLabel: UILabel?
     private var descriptionLabel: UILabel?
+    
+    // MARK: - Overridden Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
