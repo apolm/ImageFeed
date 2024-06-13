@@ -9,6 +9,11 @@ final class ImagesListViewController: UIViewController {
     private let edges = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
+    // MARK: - Overridden Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,11 +22,12 @@ final class ImagesListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard let viewController = segue.destination as? SingleImageViewController,
                   let indexPath = sender as? IndexPath else {
-                assertionFailure("Invalid segue destination")
+                assertionFailure("Invalid segue destination for ID: \(showSingleImageSegueIdentifier)")
                 return
             }
             

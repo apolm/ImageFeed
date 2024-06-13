@@ -8,6 +8,11 @@ final class ProfileViewController: UIViewController {
     private var loginLabel: UILabel?
     private var descriptionLabel: UILabel?
     
+    // MARK: - Overridden Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()

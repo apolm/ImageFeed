@@ -24,6 +24,11 @@ final class AuthViewController: UIViewController {
     }()
     private let showWebViewSegueIdentifier = "ShowWebView"
     
+    // MARK: - Overridden Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +40,7 @@ final class AuthViewController: UIViewController {
         configureBackButton()
     }
     
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
             guard let viewController = segue.destination as? WebViewViewController else {

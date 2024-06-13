@@ -11,6 +11,11 @@ final class SplashViewController: UIViewController {
     private let showAuthViewSegueIdentifier = "ShowAuthView"
     private let tokenStorage = OAuthTokenStorage()
     
+    // MARK: - Overridden Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +34,7 @@ final class SplashViewController: UIViewController {
         }
     }
     
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showAuthViewSegueIdentifier {
             guard let navigationController = segue.destination as? UINavigationController,

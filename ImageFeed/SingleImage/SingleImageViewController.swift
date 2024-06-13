@@ -16,6 +16,11 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    // MARK: - Overridden Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
