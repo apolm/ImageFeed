@@ -29,12 +29,12 @@ final class OAuthService {
             switch result {
             case .success(let data):
                 do {
-                    let response = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                    let response = try SnakeCaseJSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
                     
                     let storage = OAuthTokenStorage()
-                    storage.token = response.token
+                    storage.token = response.accessToken
                     
-                    completion(.success(response.token))
+                    completion(.success(response.accessToken))
                 } catch {
                     completion(.failure(error))
                 }
