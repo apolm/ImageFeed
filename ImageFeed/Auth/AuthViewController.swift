@@ -1,3 +1,4 @@
+import ProgressHUD
 import UIKit
 
 final class AuthViewController: UIViewController {
@@ -84,13 +85,19 @@ final class AuthViewController: UIViewController {
 // MARK: - WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        navigationController?.popViewController(animated: true)
+        
+        ProgressHUD.animate()
+        
         OAuthService.shared.fetchOAuthToken(code: code) { [weak self] result in
             guard let self else { return }
+            
+            ProgressHUD.dismiss()
+            
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                navigationController?.popViewController(animated: true)
                 print(errorMessage(from: error))
             }
         }
