@@ -1,31 +1,35 @@
 import Foundation
 
+enum OAuthServiceError: Error {
+    case failedToCreateTokenRequest
+    case repeatedTokenRequest
+}
+
 final class OAuthService {
     static let shared = OAuthService()
+    
+    private var lastCode: String?
+    private var task: URLSessionTask?
     
     private init() { }
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard var urlComponents = URLComponents(string: Constants.tokenURLString) else {
-            preconditionFailure("Unable to make token request")
+        assert(Thread.isMainThread)
+        
+        guard code != lastCode else {
+            completion(.failure(OAuthServiceError.repeatedTokenRequest))
+            return
         }
         
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code")
-        ]
+        task?.cancel()
         
-        guard let url = urlComponents.url else {
-            preconditionFailure("Unable to make token request")
+        guard let request = tokenRequest(code: code) else {
+            completion(.failure(OAuthServiceError.failedToCreateTokenRequest))
+            return
         }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        let task = URLSession.shared.data(for: request) { result in
+        lastCode = code
+        task = URLSession.shared.mainQueueDataTask(for: request) { [weak self] result in
             switch result {
             case .success(let data):
                 do {
@@ -41,8 +45,35 @@ final class OAuthService {
             case .failure(let error):
                 completion(.failure(error))
             }
+            
+            self?.lastCode = nil
+            self?.task = nil
         }
         
-        task.resume()
+        task?.resume()
+    }
+    
+    private func tokenRequest(code: String) -> URLRequest? {
+        guard var urlComponents = URLComponents(string: Constants.tokenURLString) else {
+            assertionFailure("Failed to create URL for token request")
+            return nil
+        }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "client_secret", value: Constants.secretKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
+        ]
+        
+        guard let url = urlComponents.url else {
+            assertionFailure("Failed to create URL for token request")
+            return nil
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
     }
 }
