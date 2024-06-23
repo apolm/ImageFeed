@@ -10,6 +10,7 @@ final class SplashViewController: UIViewController {
     
     private let showAuthViewSegueIdentifier = "ShowAuthView"
     private let tokenStorage = OAuthTokenStorage()
+    private let profileService = ProfileService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -27,8 +28,8 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let _ = tokenStorage.token {
-            switchToTabBarController()
+        if let token = tokenStorage.token {
+            fetchProfile(token)
         } else {
             performSegue(withIdentifier: showAuthViewSegueIdentifier, sender: nil)
         }
@@ -56,6 +57,23 @@ final class SplashViewController: UIViewController {
         ])
     }
     
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        
+        profileService.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success:
+                self.switchToTabBarController()
+            case .failure(let error):
+                print(ErrorHandler().errorMessage(from: error))
+            }
+        }
+    }
+    
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -73,6 +91,11 @@ final class SplashViewController: UIViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        switchToTabBarController()
+        
+        guard let token = tokenStorage.token else {
+            return
+        }
+        
+        fetchProfile(token)
     }
 }

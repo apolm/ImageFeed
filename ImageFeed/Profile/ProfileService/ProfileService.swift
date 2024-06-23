@@ -7,6 +7,7 @@ enum ProfileServiceError: Error {
 final class ProfileService {
     static let shared = ProfileService()
     
+    private(set) var profile: Profile?
     private var lastToken: String?
     private var task: URLSessionTask?
     
@@ -30,6 +31,7 @@ final class ProfileService {
                 do {
                     let result = try SnakeCaseJSONDecoder().decode(ProfileResult.self, from: data)
                     let profile = Profile(profileResult: result)
+                    self?.profile = profile
                     completion(.success(profile))
                 } catch {
                     completion(.failure(error))

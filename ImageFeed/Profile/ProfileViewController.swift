@@ -39,6 +39,8 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
+    private let profileService = ProfileService.shared
+    
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -55,7 +57,10 @@ final class ProfileViewController: UIViewController {
         view.addSubview(descriptionLabel)
         
         setupConstraints()
-        fetchProfile()
+        
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        }
     }
     
     // MARK: - Private Methods
@@ -82,25 +87,11 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    private func fetchProfile() {
-        guard let token = OAuthTokenStorage().token else {
-            print("Access token missing")
-            return
-        }
-        
-        ProfileService.shared.fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let profile):
-                self.nameLabel.text = profile.name
-                self.loginLabel.text = profile.loginName
-                if let bio = profile.bio {
-                    self.descriptionLabel.text = bio
-                }
-            case .failure(let error):
-                print(ErrorHandler().errorMessage(from: error))
-            }
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        if let bio = profile.bio {
+            descriptionLabel.text = bio
         }
     }
     

@@ -23,6 +23,7 @@ final class AuthViewController: UIViewController {
         return button
     }()
     private let showWebViewSegueIdentifier = "ShowWebView"
+    private let oAuthService = OAuthService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -88,10 +89,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
         
         UIBlockingProgressHUD.show()
         
-        OAuthService.shared.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self else { return }
-            
+        oAuthService.fetchOAuthToken(code: code) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
             
             switch result {
             case .success:
