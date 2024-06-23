@@ -40,6 +40,8 @@ final class ProfileViewController: UIViewController {
     }()
     
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -61,6 +63,15 @@ final class ProfileViewController: UIViewController {
         if let profile = profileService.profile {
             updateProfileDetails(profile: profile)
         }
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
     
     // MARK: - Private Methods
@@ -93,6 +104,14 @@ final class ProfileViewController: UIViewController {
         if let bio = profile.bio {
             descriptionLabel.text = bio
         }
+    }
+    
+    private func updateAvatar() {
+        guard let avatarURL = profileImageService.avatarURL,
+              let url = URL(string: avatarURL) else { return }
+        
+        //TODO: Вывод аватара
+        print("Avatar URL is: \(avatarURL)")
     }
     
     @objc

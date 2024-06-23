@@ -11,6 +11,7 @@ final class SplashViewController: UIViewController {
     private let showAuthViewSegueIdentifier = "ShowAuthView"
     private let tokenStorage = OAuthTokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -66,7 +67,13 @@ final class SplashViewController: UIViewController {
             guard let self else { return }
             
             switch result {
-            case .success:
+            case .success(let profile):
+                profileImageService.fetchProfileImageURL(username: profile.username) { imageResult in
+                    if case .failure(let error) = imageResult {
+                        print(ErrorHandler().errorMessage(from: error))
+                    }
+                }
+                
                 self.switchToTabBarController()
             case .failure(let error):
                 print(ErrorHandler().errorMessage(from: error))
