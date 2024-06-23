@@ -97,17 +97,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success:
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print(errorMessage(from: error))
+                print(ErrorHandler().errorMessage(from: error))
             }
-        }
-    }
-    
-    func errorMessage(from error: Error) -> String {
-        switch error {
-        case NetworkError.httpStatusCode(let code):
-            return "Error \(code) when receiving token."
-        default:
-            return error.localizedDescription
         }
     }
 }
