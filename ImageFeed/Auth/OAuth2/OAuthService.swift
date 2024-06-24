@@ -1,8 +1,17 @@
 import Foundation
 
-enum OAuthServiceError: Error {
+enum OAuthServiceError: Error, LocalizedError {
     case failedToCreateTokenRequest
     case repeatedTokenRequest
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToCreateTokenRequest:
+            "Failed to create token request"
+        case .repeatedTokenRequest:
+            "Repeated token request"
+        }
+    }
 }
 
 final class OAuthService {
@@ -29,19 +38,13 @@ final class OAuthService {
         }
         
         lastCode = code
-        task = URLSession.shared.mainQueueDataTask(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let response = try SnakeCaseJSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    
-                    let storage = OAuthTokenStorage()
-                    storage.token = response.accessToken
-                    
-                    completion(.success(response.accessToken))
-                } catch {
-                    completion(.failure(error))
-                }
+            case .success(let responseBody):
+                let storage = OAuthTokenStorage()
+                storage.token = responseBody.accessToken
+                
+                completion(.success(responseBody.accessToken))
             case .failure(let error):
                 completion(.failure(error))
             }

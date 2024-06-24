@@ -1,8 +1,17 @@
 import UIKit
 
-enum ProfileImageServiceError: Error {
+enum ProfileImageServiceError: Error, LocalizedError {
     case accessTokenNotDefined
     case repeatedProfileImageRequest
+    
+    var errorDescription: String? {
+        switch self {
+        case .accessTokenNotDefined:
+            "Access token not defined"
+        case .repeatedProfileImageRequest:
+            "Repeated profile image request"
+        }
+    }
 }
 
 final class ProfileImageService {
@@ -37,18 +46,12 @@ final class ProfileImageService {
         lastToken = token
         lastUsername = username
         let request = profileImageRequest(token: token, username: username)
-        task = URLSession.shared.mainQueueDataTask(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let result = try SnakeCaseJSONDecoder().decode(UserResult.self, from: data)
-                    self?.avatarURL = result.profileImage.large
-                    completion(.success(result.profileImage.large))
-                    
-                    NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
-                } catch {
-                    completion(.failure(error))
-                }
+            case .success(let userResult):
+                self?.avatarURL = userResult.profileImage.large
+                completion(.success(userResult.profileImage.large))
+                NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
             case .failure(let error):
                 completion(.failure(error))
             }

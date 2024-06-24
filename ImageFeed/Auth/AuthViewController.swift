@@ -98,7 +98,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success:
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print(ErrorHandler().errorMessage(from: error))
+                ErrorHandler.printError(error, origin: "oAuthService.fetchOAuthToken")
             }
         }
     }

@@ -1,7 +1,14 @@
 import UIKit
 
-enum ProfileServiceError: Error {
+enum ProfileServiceError: Error, LocalizedError {
     case repeatedProfileRequest
+    
+    var errorDescription: String? {
+        switch self {
+        case .repeatedProfileRequest:
+            "Repeated profile request"
+        }
+    }
 }
 
 final class ProfileService {
@@ -25,17 +32,12 @@ final class ProfileService {
         
         lastToken = token
         let request = profileRequest(token: token)
-        task = URLSession.shared.mainQueueDataTask(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let result = try SnakeCaseJSONDecoder().decode(ProfileResult.self, from: data)
-                    let profile = Profile(profileResult: result)
-                    self?.profile = profile
-                    completion(.success(profile))
-                } catch {
-                    completion(.failure(error))
-                }
+            case .success(let profileResult):
+                let profile = Profile(profileResult: profileResult)
+                self?.profile = profile
+                completion(.success(profile))
             case .failure(let error):
                 completion(.failure(error))
             }

@@ -1,12 +1,11 @@
 import UIKit
 
 struct ErrorHandler {
-    func errorMessage(from error: Error) -> String {
-        switch error {
-        case NetworkError.httpStatusCode(let code):
-            return "Error \(code) when receiving token."
-        default:
-            return error.localizedDescription
+    static func printError(_ error: Error, origin: String, details: String? = nil) {
+        var message = "[\(origin)]: \(error.localizedDescription)"
+        if let details {
+            message += ", \(details)"
         }
+        print(message)
     }
 }
