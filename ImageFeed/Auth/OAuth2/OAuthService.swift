@@ -3,6 +3,7 @@ import Foundation
 enum OAuthServiceError: Error, LocalizedError {
     case failedToCreateTokenRequest
     case repeatedTokenRequest
+    case failedToSaveToken
     
     var errorDescription: String? {
         switch self {
@@ -10,6 +11,8 @@ enum OAuthServiceError: Error, LocalizedError {
             "Failed to create token request"
         case .repeatedTokenRequest:
             "Repeated token request"
+        case .failedToSaveToken:
+            "Failed to save token"
         }
     }
 }
@@ -41,10 +44,12 @@ final class OAuthService {
         task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
             case .success(let responseBody):
-                let storage = OAuthTokenStorage()
-                storage.token = responseBody.accessToken
-                
-                completion(.success(responseBody.accessToken))
+                let isSuccess = OAuthTokenStorage().setToken(responseBody.accessToken)
+                if isSuccess {
+                    completion(.success(responseBody.accessToken))
+                } else {
+                    completion(.failure(OAuthServiceError.failedToSaveToken))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
