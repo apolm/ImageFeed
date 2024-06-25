@@ -1,9 +1,10 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var avatarImage: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "Avatar"))
+        let image = UIImageView(image: UIImage(named: "StubAvatar"))
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
@@ -110,8 +111,11 @@ final class ProfileViewController: UIViewController {
         guard let avatarURL = profileImageService.avatarURL,
               let url = URL(string: avatarURL) else { return }
         
-        //TODO: Вывод аватара
-        print("Avatar URL is: \(avatarURL)")
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        avatarImage.kf.setImage(with: url,
+                                placeholder: UIImage(named: "StubAvatar"),
+                                options: [.processor(processor),
+                                          .cacheSerializer(FormatIndicatedCacheSerializer.png)])
     }
     
     @objc
