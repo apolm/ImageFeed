@@ -58,6 +58,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(nameLabel)
         view.addSubview(loginLabel)
         view.addSubview(descriptionLabel)
+        view.backgroundColor = .ypBlack
         
         setupConstraints()
         

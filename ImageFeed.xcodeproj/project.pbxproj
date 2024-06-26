@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8F0A00E92C2A7A2200120362 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8F0A00E82C2A7A2200120362 /* Kingfisher */; };
 		8F0A00EC2C2A8EDB00120362 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 8F0A00EB2C2A8EDB00120362 /* SwiftKeychainWrapper */; };
+		8F0A00EF2C2A9D5600120362 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0A00EE2C2A9D5600120362 /* TabBarController.swift */; };
 		8F0F8BCB2BF3401900308F61 /* ImagesListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0F8BCA2BF3401900308F61 /* ImagesListCellViewModel.swift */; };
 		8F1699542C26BFF900BD24F9 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1699532C26BFF900BD24F9 /* UIBlockingProgressHUD.swift */; };
 		8F1699582C28030600BD24F9 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1699572C28030600BD24F9 /* ProfileService.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F0A00EE2C2A9D5600120362 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		8F0F8BCA2BF3401900308F61 /* ImagesListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCellViewModel.swift; sourceTree = "<group>"; };
 		8F1699532C26BFF900BD24F9 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		8F1699572C28030600BD24F9 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
@@ -89,6 +91,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F0A00ED2C2A9D2300120362 /* TabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				8F0A00EE2C2A9D5600120362 /* TabBarController.swift */,
+			);
+			path = TabBarController;
+			sourceTree = "<group>";
+		};
 		8F1699552C26C18E00BD24F9 /* UIBlockingProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +166,7 @@
 				8F2D89372BEA0312005F082C /* Resources */,
 				8FC836842BFAFD2A002492FA /* SingleImage */,
 				8F7945072C19B38F00D3996D /* SplashScreen */,
+				8F0A00ED2C2A9D2300120362 /* TabBarController */,
 				8F1699552C26C18E00BD24F9 /* UIBlockingProgressHUD */,
 			);
 			path = ImageFeed;
@@ -323,6 +334,7 @@
 				8F16995A2C28035600BD24F9 /* ProfileResult.swift in Sources */,
 				8F1699632C28582600BD24F9 /* UserResult.swift in Sources */,
 				8F2005E52C117D8E009E3422 /* WebViewViewController.swift in Sources */,
+				8F0A00EF2C2A9D5600120362 /* TabBarController.swift in Sources */,
 				8F7945012C18816500D3996D /* URLSession+Extensions.swift in Sources */,
 				8F16995C2C28040300BD24F9 /* Profile.swift in Sources */,
 				8F288FE02BF5CAF5001F2DFB /* ProfileViewController.swift in Sources */,

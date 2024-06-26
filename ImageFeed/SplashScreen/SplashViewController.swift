@@ -8,7 +8,6 @@ final class SplashViewController: UIViewController {
         return image
     }()
     
-    private let showAuthViewSegueIdentifier = "ShowAuthView"
     private let tokenStorage = OAuthTokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
@@ -23,6 +22,7 @@ final class SplashViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(logoImage)
+        view.backgroundColor = .ypBlack
         setupConstraints()
     }
     
@@ -32,21 +32,16 @@ final class SplashViewController: UIViewController {
         if let token = tokenStorage.token {
             fetchProfile(token)
         } else {
-            performSegue(withIdentifier: showAuthViewSegueIdentifier, sender: nil)
-        }
-    }
-    
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthViewSegueIdentifier {
-            guard let navigationController = segue.destination as? UINavigationController,
-                  let viewController = navigationController.viewControllers[0] as? AuthViewController else {
-                assertionFailure("Invalid segue destination for ID: \(showAuthViewSegueIdentifier)")
+            guard let navigationController = UIStoryboard(name: "Main", bundle: .main)
+                    .instantiateViewController(withIdentifier: "AuthNavigationController") as? UINavigationController,
+                  let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
+                assertionFailure("Invalid destination for AuthViewController")
                 return
             }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
+            authViewController.delegate = self
+            
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
         }
     }
     
