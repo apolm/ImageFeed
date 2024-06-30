@@ -23,6 +23,7 @@ final class AuthViewController: UIViewController {
         return button
     }()
     private let showWebViewSegueIdentifier = "ShowWebView"
+    private let oAuthService = OAuthService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -84,24 +85,28 @@ final class AuthViewController: UIViewController {
 // MARK: - WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        OAuthService.shared.fetchOAuthToken(code: code) { [weak self] result in
+        navigationController?.popViewController(animated: true)
+        
+        UIBlockingProgressHUD.show()
+        
+        oAuthService.fetchOAuthToken(code: code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
             guard let self else { return }
+            
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                navigationController?.popViewController(animated: true)
-                print(errorMessage(from: error))
+                ErrorHandler.printError(error, origin: "oAuthService.fetchOAuthToken")
+                
+                let alertController = UIAlertController(title: "Что-то пошло не так(",
+                                                        message: "Не удалось войти в систему",
+                                                        preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true)
             }
-        }
-    }
-    
-    func errorMessage(from error: Error) -> String {
-        switch error {
-        case NetworkError.httpStatusCode(let code):
-            return "Error \(code) when receiving token."
-        default:
-            return error.localizedDescription
         }
     }
 }

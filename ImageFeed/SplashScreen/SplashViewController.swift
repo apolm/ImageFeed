@@ -8,8 +8,9 @@ final class SplashViewController: UIViewController {
         return image
     }()
     
-    private let showAuthViewSegueIdentifier = "ShowAuthView"
     private let tokenStorage = OAuthTokenStorage()
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -21,30 +22,26 @@ final class SplashViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(logoImage)
+        view.backgroundColor = .ypBlack
         setupConstraints()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let _ = tokenStorage.token {
-            switchToTabBarController()
+        if let token = tokenStorage.token {
+            fetchProfile(token)
         } else {
-            performSegue(withIdentifier: showAuthViewSegueIdentifier, sender: nil)
-        }
-    }
-    
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthViewSegueIdentifier {
-            guard let navigationController = segue.destination as? UINavigationController,
-                  let viewController = navigationController.viewControllers[0] as? AuthViewController else {
-                assertionFailure("Invalid segue destination for ID: \(showAuthViewSegueIdentifier)")
+            guard let navigationController = UIStoryboard(name: "Main", bundle: .main)
+                    .instantiateViewController(withIdentifier: "AuthNavigationController") as? UINavigationController,
+                  let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
+                assertionFailure("Invalid destination for AuthViewController")
                 return
             }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
+            authViewController.delegate = self
+            
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
         }
     }
     
@@ -54,6 +51,29 @@ final class SplashViewController: UIViewController {
             logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        
+        profileService.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success(let profile):
+                profileImageService.fetchProfileImageURL(username: profile.username) { imageResult in
+                    if case .failure(let error) = imageResult {
+                        ErrorHandler.printError(error, origin: "profileImageService.fetchProfileImageURL")
+                    }
+                }
+                
+                self.switchToTabBarController()
+            case .failure(let error):
+                ErrorHandler.printError(error, origin: "profileService.fetchProfile")
+            }
+        }
     }
     
     private func switchToTabBarController() {
@@ -73,6 +93,11 @@ final class SplashViewController: UIViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        switchToTabBarController()
+        
+        guard let token = tokenStorage.token else {
+            return
+        }
+        
+        fetchProfile(token)
     }
 }
