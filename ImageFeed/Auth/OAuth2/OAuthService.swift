@@ -63,7 +63,6 @@ final class OAuthService {
     
     private func tokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: Constants.tokenURLString) else {
-            assertionFailure("Failed to create URL for token request")
             return nil
         }
         
@@ -76,7 +75,6 @@ final class OAuthService {
         ]
         
         guard let url = urlComponents.url else {
-            assertionFailure("Failed to create URL for token request")
             return nil
         }
         
