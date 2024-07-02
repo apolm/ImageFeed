@@ -22,7 +22,6 @@ final class AuthViewController: UIViewController {
         button.addTarget(self, action: #selector(Self.loginButtonDidTap), for: .touchUpInside)
         return button
     }()
-    private let showWebViewSegueIdentifier = "ShowWebView"
     private let oAuthService = OAuthService.shared
     
     // MARK: - Overridden Properties
@@ -38,20 +37,9 @@ final class AuthViewController: UIViewController {
         view.addSubview(loginButton)
         setupConstraints()
         
+        view.backgroundColor = .ypBlack
+        
         configureBackButton()
-    }
-    
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewSegueIdentifier {
-            guard let viewController = segue.destination as? WebViewViewController else {
-                assertionFailure("Invalid segue destination for ID: \(showWebViewSegueIdentifier)")
-                return
-            }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
     }
     
     // MARK: - Private Methods
@@ -71,7 +59,9 @@ final class AuthViewController: UIViewController {
     
     @objc
     private func loginButtonDidTap() {
-        performSegue(withIdentifier: showWebViewSegueIdentifier, sender: nil)
+        let webView = WebViewViewController()
+        webView.delegate = self
+        navigationController?.pushViewController(webView, animated: true)
     }
     
     private func configureBackButton() {
