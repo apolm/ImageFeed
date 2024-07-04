@@ -1,22 +1,59 @@
 import UIKit
 
 final class ImagesListCell: UITableViewCell {
-    // MARK: - IB Outlets
-    @IBOutlet private var cellImage: UIImageView!
-    @IBOutlet private var likeButton: UIButton!
-    @IBOutlet private var dateLabel: UILabel!
-    
-    // MARK: - Public Properties
-    static let reuseIdentifier = "ImagesListCell"
-    
     // MARK: - Private Properties
+    private lazy var cellImage: UIImageView = {
+        let image = UIImageView()
+        image.contentMode = .scaleAspectFill
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 16
+        image.layer.masksToBounds = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    private lazy var likeButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.addTarget(self, action: #selector(Self.likeButtonDidTap), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    private lazy var dateLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .ypWhite
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM YYYY"
         return formatter
     } ()
     
+    // MARK: - Public Properties
+    static let reuseIdentifier = "ImagesListCell"
+        
     // MARK: - Public Methods
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(cellImage)
+        contentView.addSubview(likeButton)
+        contentView.addSubview(dateLabel)
+        
+        contentView.backgroundColor = .ypBlack
+        
+        backgroundColor = .ypBlack
+        selectionStyle = .none
+        
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func config(with model: ImagesListCellViewModel) {
         cellImage.image = model.image
         dateLabel.text = ImagesListCell.dateFormatter.string(from: model.date)
@@ -44,5 +81,29 @@ final class ImagesListCell: UITableViewCell {
         gradientContainerView.layer.insertSublayer(gradient, at: 0)
         
         cellImage.addSubview(gradientContainerView)
+    }
+    
+    // MARK: - Private Methods
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            cellImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            cellImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            cellImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+            cellImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
+            
+            likeButton.heightAnchor.constraint(equalToConstant: 44),
+            likeButton.widthAnchor.constraint(equalToConstant: 44),
+            likeButton.trailingAnchor.constraint(equalTo: cellImage.trailingAnchor),
+            likeButton.topAnchor.constraint(equalTo: cellImage.topAnchor),
+            
+            dateLabel.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor, constant: 8),
+            dateLabel.trailingAnchor.constraint(lessThanOrEqualTo: cellImage.trailingAnchor, constant: -8),
+            dateLabel.bottomAnchor.constraint(equalTo: cellImage.bottomAnchor, constant: -8)
+        ])
+    }
+    
+    @objc
+    private func likeButtonDidTap() {
+        
     }
 }

@@ -9,11 +9,9 @@ final class ProfileViewController: UIViewController {
         return image
     }()
     private lazy var logoutButton: UIButton = {
-        let button = UIButton.systemButton(
-            with: UIImage(named: "Logout") ?? UIImage(),
-            target: self,
-            action: #selector(Self.logoutButtonDidTap))
-        button.tintColor = .ypRed
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "Logout"), for: .normal)
+        button.addTarget(self, action: #selector(Self.logoutButtonDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
