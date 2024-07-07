@@ -17,6 +17,7 @@ final class ImagesListViewController: UIViewController {
     
     private let photosName = Array(0..<20).map{ "\($0)" }
     private let edges = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+    private let imagesListService = ImagesListService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -91,5 +92,11 @@ extension ImagesListViewController: UITableViewDelegate {
             return 0
         }
         return imageHeight(image) + edges.top + edges.bottom
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == imagesListService.photos.count {
+            imagesListService.fetchPhotosNextPage()
+        }
     }
 }

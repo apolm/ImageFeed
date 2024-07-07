@@ -1,13 +1,10 @@
 import UIKit
 
 enum ProfileImageServiceError: Error, LocalizedError {
-    case accessTokenNotDefined
     case repeatedProfileImageRequest
     
     var errorDescription: String? {
         switch self {
-        case .accessTokenNotDefined:
-            "Access token not defined"
         case .repeatedProfileImageRequest:
             "Repeated profile image request"
         }
@@ -31,7 +28,7 @@ final class ProfileImageService {
         assert(Thread.isMainThread)
         
         guard let token = tokenStorage.token else {
-            completion(.failure(ProfileImageServiceError.accessTokenNotDefined))
+            completion(.failure(OAuthTokenError.noAccessToken))
             return
         }
         

@@ -38,6 +38,10 @@
 		8FAFE8002C0B6128000C319B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FAFE7FF2C0B6128000C319B /* Constants.swift */; };
 		8FC836862BFAFD5E002492FA /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC836852BFAFD5E002492FA /* SingleImageViewController.swift */; };
 		8FD11A5E2BEF4F6B00FC2640 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */; };
+		8FD69CE42C3A639C00CA9F4D /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD69CE32C3A639C00CA9F4D /* ImagesListService.swift */; };
+		8FD69CE62C3A645900CA9F4D /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD69CE52C3A645900CA9F4D /* Photo.swift */; };
+		8FD69CE82C3A6D0B00CA9F4D /* PhotoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD69CE72C3A6D0B00CA9F4D /* PhotoResult.swift */; };
+		8FD69CEA2C3A716400CA9F4D /* OAuthTokenError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD69CE92C3A716400CA9F4D /* OAuthTokenError.swift */; };
 		8FFB7D9B2C1C3A6000747839 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8FFB7D9A2C1C3A6000747839 /* ProgressHUD */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +77,10 @@
 		8FAFE7FF2C0B6128000C319B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		8FC836852BFAFD5E002492FA /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		8FD69CE32C3A639C00CA9F4D /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
+		8FD69CE52C3A645900CA9F4D /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		8FD69CE72C3A6D0B00CA9F4D /* PhotoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResult.swift; sourceTree = "<group>"; };
+		8FD69CE92C3A716400CA9F4D /* OAuthTokenError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +213,7 @@
 				8F7944FE2C1853A700D3996D /* OAuthService.swift */,
 				8F7945022C18882A00D3996D /* OAuthTokenResponseBody.swift */,
 				8F7945042C18915900D3996D /* OAuthTokenStorage.swift */,
+				8FD69CE92C3A716400CA9F4D /* OAuthTokenError.swift */,
 			);
 			path = OAuth2;
 			sourceTree = "<group>";
@@ -242,8 +251,19 @@
 				8F2D89272BE9E7EB005F082C /* ImagesListViewController.swift */,
 				8FD11A5D2BEF4F6B00FC2640 /* ImagesListCell.swift */,
 				8F0F8BCA2BF3401900308F61 /* ImagesListCellViewModel.swift */,
+				8FD69CE22C3A637700CA9F4D /* ImagesListService */,
 			);
 			path = ImagesList;
+			sourceTree = "<group>";
+		};
+		8FD69CE22C3A637700CA9F4D /* ImagesListService */ = {
+			isa = PBXGroup;
+			children = (
+				8FD69CE32C3A639C00CA9F4D /* ImagesListService.swift */,
+				8FD69CE52C3A645900CA9F4D /* Photo.swift */,
+				8FD69CE72C3A6D0B00CA9F4D /* PhotoResult.swift */,
+			);
+			path = ImagesListService;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,12 +368,16 @@
 				8F7945052C18915900D3996D /* OAuthTokenStorage.swift in Sources */,
 				8F7945032C18882A00D3996D /* OAuthTokenResponseBody.swift in Sources */,
 				8F2D89262BE9E7EB005F082C /* SceneDelegate.swift in Sources */,
+				8FD69CE82C3A6D0B00CA9F4D /* PhotoResult.swift in Sources */,
 				8F3A45202C0D982B00F3D8A1 /* AuthViewController.swift in Sources */,
 				8FAFE8002C0B6128000C319B /* Constants.swift in Sources */,
 				8F7945092C19B3E900D3996D /* SplashViewController.swift in Sources */,
 				8F16995E2C28175900BD24F9 /* ErrorHandler.swift in Sources */,
+				8FD69CE42C3A639C00CA9F4D /* ImagesListService.swift in Sources */,
 				8F41EAE02C1B2F94001CB976 /* JSONDecoder+Extensions.swift in Sources */,
 				8F1699582C28030600BD24F9 /* ProfileService.swift in Sources */,
+				8FD69CE62C3A645900CA9F4D /* Photo.swift in Sources */,
+				8FD69CEA2C3A716400CA9F4D /* OAuthTokenError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
