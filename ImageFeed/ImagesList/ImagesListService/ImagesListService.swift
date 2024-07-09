@@ -2,11 +2,14 @@ import UIKit
 
 enum ImagesListServiceError: Error, LocalizedError {
     case failedToCreatePhotosRequest
+    case failedToCreateLikeRequest
         
     var errorDescription: String? {
         switch self {
         case .failedToCreatePhotosRequest:
             "Failed to create photos request"
+        case .failedToCreateLikeRequest:
+            "Failed to create like request"
         }
     }
 }
@@ -18,14 +21,15 @@ final class ImagesListService {
     private (set) var photos: [Photo] = []
     
     private var lastLoadedPage: Int?
-    private var task: URLSessionTask?
+    private var photosTask: URLSessionTask?
+    private var likeTask: URLSessionTask?
     
     private let tokenStorage = OAuthTokenStorage()
     
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         
-        guard task == nil else {
+        guard photosTask == nil else {
             return
         }
         
@@ -43,7 +47,7 @@ final class ImagesListService {
             return
         }
         
-        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
+        photosTask = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             switch result {
             case .success(let photosResult):
                 photosResult.forEach { self?.photos.append(Photo(photoResult: $0)) }
@@ -53,10 +57,35 @@ final class ImagesListService {
             }
             
             self?.lastLoadedPage = nextPage
-            self?.task = nil
+            self?.photosTask = nil
+        }
+        photosTask?.resume()
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        guard likeTask == nil else {
+            return
         }
         
-        task?.resume()
+        guard let token = tokenStorage.token else {
+            completion(.failure(OAuthTokenError.noAccessToken))
+            return
+        }
+        
+        let request = likeRequest(token: token, photoId: photoId, isLike: isLike)
+        likeTask = URLSession.shared.mainQueueDataTask(for: request) { [weak self] (result: Result<Data, Error>) in
+            switch result {
+            case .success:
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+            
+            self?.likeTask = nil
+        }
+        likeTask?.resume()
     }
     
     private func photosRequest(token: String, page: Int) -> URLRequest? {
@@ -73,4 +102,16 @@ final class ImagesListService {
         
         return request
     }
+    
+    private func likeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest {
+        let url = Constants.defaultBaseURL
+            .appendingPathComponent("photos")
+            .appendingPathComponent(photoId)
+            .appendingPathComponent("like")
+        var request = URLRequest(url: url)
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
+    
 }

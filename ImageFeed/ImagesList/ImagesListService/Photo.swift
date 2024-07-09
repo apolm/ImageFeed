@@ -8,7 +8,7 @@ struct Photo {
     let regularImageURL: String
     var regularImageLoaded = false
     let largeImageURL: String
-    let isLiked: Bool
+    var isLiked: Bool
     
     init(photoResult: PhotoResult) {
         id = photoResult.id

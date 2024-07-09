@@ -90,6 +90,7 @@ extension ImagesListViewController: UITableViewDataSource {
               let url = URL(string: photo.regularImageURL) else {
             return UITableViewCell()
         }
+        imageListCell.delegate = self
         
         let viewModel = ImagesListCellViewModel(url: url,
                                                 imageHeight: imageHeight(photo.size),
@@ -126,6 +127,30 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == imagesListService.photos.count {
             imagesListService.fetchPhotosNextPage()
+        }
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success:
+                self.photos[indexPath.row].isLiked.toggle()
+                cell.setIsLiked(self.photos[indexPath.row].isLiked)
+            case .failure(let error):
+                ErrorHandler.printError(error, origin: "ImagesListService.changeLike")
+            }
         }
     }
 }

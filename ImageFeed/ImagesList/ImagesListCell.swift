@@ -34,6 +34,7 @@ final class ImagesListCell: UITableViewCell {
     
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: ImagesListCellDelegate?
         
     // MARK: - Public Methods
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -103,6 +104,11 @@ final class ImagesListCell: UITableViewCell {
         }
     }
     
+    func setIsLiked(_ isLiked: Bool) {
+        let buttonImage = UIImage(named: isLiked ? "LikeOn" : "LikeOff")
+        likeButton.setImage(buttonImage, for: .normal)
+    }
+    
     // MARK: - Private Methods
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -124,6 +130,6 @@ final class ImagesListCell: UITableViewCell {
     
     @objc
     private func likeButtonDidTap() {
-        
+        delegate?.imageListCellDidTapLike(self)
     }
 }
