@@ -1,7 +1,7 @@
 import Foundation
 
 struct UrlsResult: Codable {
-    let thumb: String
+    let regular: String
     let full: String
 }
 
