@@ -96,12 +96,7 @@ extension ImagesListViewController: UITableViewDataSource {
                                                 imageHeight: imageHeight(photo.size),
                                                 isLiked: photo.isLiked,
                                                 date: photo.createdAt)
-        
-        photos[indexPath.row].regularImageLoaded = false
-        imageListCell.config(with: viewModel) { [weak self] in
-            self?.photos[indexPath.row].regularImageLoaded = true
-            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-        }
+        imageListCell.config(with: viewModel)
         
         return imageListCell
     }
@@ -121,7 +116,7 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let photo = photos[indexPath.row]
-        return photo.regularImageLoaded ? (imageHeight(photo.size) + edges.top + edges.bottom) : 200
+        return imageHeight(photo.size) + edges.top + edges.bottom
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

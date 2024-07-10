@@ -64,13 +64,11 @@ final class ImagesListCell: UITableViewCell {
         likeButton.setImage(nil, for: .normal)
     }
     
-    func config(with model: ImagesListCellViewModel, onImageLoad: @escaping () -> Void) {
+    func config(with model: ImagesListCellViewModel) {
         cellImage.kf.indicatorType = .activity
         cellImage.kf.setImage(with: model.url, placeholder: UIImage(named: "StubCard")) { [weak self] result in
             guard let self else { return }
-            
-            onImageLoad()
-            
+                        
             if let date = model.date {
                 dateLabel.isHidden = false
                 dateLabel.text = ImagesListCell.dateFormatter.string(from: date)

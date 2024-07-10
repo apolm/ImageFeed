@@ -6,7 +6,6 @@ struct Photo {
     let createdAt: Date?
     let welcomeDescription: String?
     let regularImageURL: String
-    var regularImageLoaded = false
     let largeImageURL: String
     var isLiked: Bool
     
