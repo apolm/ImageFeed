@@ -6,7 +6,7 @@ struct Photo {
     let createdAt: Date?
     let welcomeDescription: String?
     let regularImageURL: String
-    let largeImageURL: String
+    let fullImageURL: String
     var isLiked: Bool
     
     init(photoResult: PhotoResult) {
@@ -15,7 +15,7 @@ struct Photo {
         createdAt = photoResult.createdAt
         welcomeDescription = photoResult.description
         regularImageURL = photoResult.urls.regular
-        largeImageURL = photoResult.urls.full
+        fullImageURL = photoResult.urls.full
         isLiked = photoResult.likedByUser
     }
 }

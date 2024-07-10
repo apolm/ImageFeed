@@ -1,10 +1,11 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.minimumZoomScale = 0.1
+        scrollView.minimumZoomScale = 0.05
         scrollView.maximumZoomScale = 1.25
         scrollView.delegate = self
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,15 +40,19 @@ final class SingleImageViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    private lazy var stubImageView: UIImageView = {
+        let image = UIImageView(image: UIImage(named: "StubLogo"))
+        image.contentMode = .scaleAspectFit
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    private var image: UIImage?
     
     // MARK: - Public Properties
-    var image: UIImage? {
+    var imageUrl: String? {
         didSet {
-            guard isViewLoaded, let image else { return }
-
-            imageView.image = image
-            imageView.frame.size = image.size
-            rescaleAndCenterImageInScrollView(image: image)
+            guard isViewLoaded else { return }
+            loadImage()
         }
     }
     
@@ -59,26 +64,19 @@ final class SingleImageViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        guard let image else { return }
-        
+                
         scrollView.addSubview(imageView)
         view.addSubview(scrollView)
         view.addSubview(backwardButton)
         view.addSubview(sharingButton)
-        
-        imageView.image = image
-        imageView.frame.size = image.size
+        view.addSubview(stubImageView)
+                
+        sharingButton.isHidden = true
         
         view.backgroundColor = .ypBlack
         
         setupConstraints()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        guard let image else { return }
-        rescaleAndCenterImageInScrollView(image: image)
+        loadImage()
     }
     
     // MARK: - Private Methods
@@ -97,11 +95,16 @@ final class SingleImageViewController: UIViewController {
             sharingButton.heightAnchor.constraint(equalToConstant: 51),
             sharingButton.widthAnchor.constraint(equalToConstant: 51),
             sharingButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            sharingButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+            sharingButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            
+            stubImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stubImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
-    private func rescaleAndCenterImageInScrollView(image: UIImage) {
+    private func rescaleAndCenterImageInScrollView() {
+        guard let image else { return }
+        
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
         
@@ -120,6 +123,48 @@ final class SingleImageViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
     
+    private func loadImage() {
+        guard let imageUrl,
+              let url = URL(string: imageUrl) else {
+            return
+        }
+        
+        UIBlockingProgressHUD.show()
+        
+        imageView.kf.setImage(with: url) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success(let imageResult):
+                self.image = imageResult.image
+                self.imageView.frame.size = imageResult.image.size
+                self.rescaleAndCenterImageInScrollView()
+                self.sharingButton.isHidden = false
+                self.stubImageView.isHidden = true
+            case .failure(let error):
+                ErrorHandler.printError(error, origin: "SingleImageViewController.loadImage")
+                self.showError(error)
+            }
+        }
+    }
+    
+    private func showError(_ error: Error) {
+        let alertController = UIAlertController(title: "Что-то пошло не так",
+                                                message: "Попробовать ещё раз?",
+                                                preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Не надо", style: .default)
+        alertController.addAction(dismissAction)
+        
+        let retryAction = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.loadImage()
+        }
+        alertController.addAction(retryAction)
+        
+        self.present(alertController, animated: true)
+    }
+    
     @objc
     private func backwardButtonDidTap() {
         dismiss(animated: true)
@@ -133,9 +178,8 @@ final class SingleImageViewController: UIViewController {
     }
     
     @objc private func handleDoubleTap(_ sender: UITapGestureRecognizer) {
-        guard let image else { return }
         UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.rescaleAndCenterImageInScrollView(image: image)
+            self?.rescaleAndCenterImageInScrollView()
         }
     }
 }

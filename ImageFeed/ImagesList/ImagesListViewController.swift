@@ -105,13 +105,13 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let image = UIImage(named: photos[indexPath.row])
-//
-//        let viewController = SingleImageViewController()
-//        viewController.image = image
-//        viewController.modalPresentationStyle = .fullScreen
-//        
-//        present(viewController, animated: true)
+        let photo = photos[indexPath.row]
+        
+        let viewController = SingleImageViewController()
+        viewController.imageUrl = photo.fullImageURL
+        viewController.modalPresentationStyle = .fullScreen
+        
+        present(viewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
