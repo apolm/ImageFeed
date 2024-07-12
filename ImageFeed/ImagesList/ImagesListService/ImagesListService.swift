@@ -24,7 +24,7 @@ final class ImagesListService {
     private var photosTask: URLSessionTask?
     private var likeTask: URLSessionTask?
     
-    private let tokenStorage = OAuthTokenStorage()
+    private let tokenStorage = OAuthTokenStorage.shared
     
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
@@ -86,6 +86,15 @@ final class ImagesListService {
             self?.likeTask = nil
         }
         likeTask?.resume()
+    }
+    
+    func clearData() {
+        photos = []
+        lastLoadedPage = nil
+        photosTask?.cancel()
+        photosTask = nil
+        likeTask?.cancel()
+        likeTask = nil
     }
     
     private func photosRequest(token: String, page: Int) -> URLRequest? {

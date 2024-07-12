@@ -20,7 +20,7 @@ final class ProfileImageService {
     private var lastUsername: String?
     private var task: URLSessionTask?
     
-    private let tokenStorage = OAuthTokenStorage()
+    private let tokenStorage = OAuthTokenStorage.shared
     
     private init() { }
     
@@ -59,6 +59,14 @@ final class ProfileImageService {
         }
         
         task?.resume()
+    }
+    
+    func clearData() {
+        avatarURL = nil
+        lastToken = nil
+        lastUsername = nil
+        task?.cancel()
+        task = nil
     }
     
     private func profileImageRequest(token: String, username: String) -> URLRequest {
