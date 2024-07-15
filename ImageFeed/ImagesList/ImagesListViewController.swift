@@ -20,6 +20,12 @@ final class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
     private var imagesListServiceObserver: NSObjectProtocol?
     
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMMM YYYY"
+        return formatter
+    } ()
+    
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -95,7 +101,7 @@ extension ImagesListViewController: UITableViewDataSource {
         let viewModel = ImagesListCellViewModel(url: url,
                                                 imageHeight: imageHeight(photo.size),
                                                 isLiked: photo.isLiked,
-                                                date: photo.createdAt)
+                                                date: photo.createdAt.map { dateFormatter.string(from: $0) } ?? "")
         imageListCell.config(with: viewModel)
         
         return imageListCell

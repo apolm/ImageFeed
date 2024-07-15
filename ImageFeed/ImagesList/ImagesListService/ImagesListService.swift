@@ -25,7 +25,12 @@ final class ImagesListService {
     private var likeTask: URLSessionTask?
     
     private let tokenStorage = OAuthTokenStorage.shared
+    private let dateFormatter: ISO8601DateFormatter = {
+        ISO8601DateFormatter()
+    } ()
     
+    private init() { }
+  
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         
@@ -48,16 +53,28 @@ final class ImagesListService {
         }
         
         photosTask = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
+            guard let self else { return }
+            
             switch result {
             case .success(let photosResult):
-                photosResult.forEach { self?.photos.append(Photo(photoResult: $0)) }
+                for photoResult in photosResult {
+                    let photo = Photo(id: photoResult.id,
+                                      size: CGSize(width: photoResult.width, height: photoResult.height),
+                                      createdAt: dateFormatter.date(from: photoResult.createdAt),
+                                      welcomeDescription: photoResult.description,
+                                      regularImageURL: photoResult.urls.regular,
+                                      fullImageURL: photoResult.urls.full,
+                                      isLiked: photoResult.likedByUser)
+                    self.photos.append(photo)
+                }
+                
                 NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
             case .failure(let error):
                 ErrorHandler.printError(error, origin: "ImagesListService.fetchPhotosNextPage")
             }
             
-            self?.lastLoadedPage = nextPage
-            self?.photosTask = nil
+            self.lastLoadedPage = nextPage
+            self.photosTask = nil
         }
         photosTask?.resume()
     }

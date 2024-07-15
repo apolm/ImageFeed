@@ -26,12 +26,6 @@ final class ImagesListCell: UITableViewCell {
         return label
     }()
     
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMMM YYYY"
-        return formatter
-    } ()
-    
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
     weak var delegate: ImagesListCellDelegate?
@@ -69,13 +63,8 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.setImage(with: model.url, placeholder: UIImage(named: "StubCard")) { [weak self] result in
             guard let self else { return }
                         
-            if let date = model.date {
-                dateLabel.isHidden = false
-                dateLabel.text = ImagesListCell.dateFormatter.string(from: date)
-            } else {
-                dateLabel.isHidden = true
-            }
-            
+            dateLabel.text = model.date
+                        
             let buttonImage = UIImage(named: model.isLiked ? "LikeOn" : "LikeOff")
             likeButton.setImage(buttonImage, for: .normal)
             

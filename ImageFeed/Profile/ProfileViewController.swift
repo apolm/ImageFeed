@@ -120,9 +120,11 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func logoutButtonDidTap() {
-        let alertController = UIAlertController(title: "Пока, пока!",
-                                                message: "Уверены что хотите выйти?",
-                                                preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert
+        )
         let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             self?.logoutService.logout()
             
