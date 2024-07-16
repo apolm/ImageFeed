@@ -41,6 +41,7 @@ final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var logoutService = ProfileLogoutService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -119,6 +120,23 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func logoutButtonDidTap() {
+        let alertController = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert
+        )
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            self?.logoutService.logout()
+            
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = SplashViewController()
+            }
+        }
+        alertController.addAction(yesAction)
         
+        let noAction = UIAlertAction(title: "Нет", style: .default)
+        alertController.addAction(noAction)
+        
+        self.present(alertController, animated: true)
     }
 }

@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     // MARK: - Private Properties
@@ -25,14 +26,9 @@ final class ImagesListCell: UITableViewCell {
         return label
     }()
     
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMMM YYYY"
-        return formatter
-    } ()
-    
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: ImagesListCellDelegate?
         
     // MARK: - Public Methods
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -54,33 +50,50 @@ final class ImagesListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImage.kf.cancelDownloadTask()
+        cellImage.image = nil
+        dateLabel.text = nil
+        likeButton.setImage(nil, for: .normal)
+    }
+    
     func config(with model: ImagesListCellViewModel) {
-        cellImage.image = model.image
-        dateLabel.text = ImagesListCell.dateFormatter.string(from: model.date)
-        
-        let buttonImage = UIImage(named: model.isFavorite ? "LikeOn" : "LikeOff")
+        cellImage.kf.indicatorType = .activity
+        cellImage.kf.setImage(with: model.url, placeholder: UIImage(named: "StubCard")) { [weak self] result in
+            guard let self else { return }
+                        
+            dateLabel.text = model.date
+                        
+            let buttonImage = UIImage(named: model.isLiked ? "LikeOn" : "LikeOff")
+            likeButton.setImage(buttonImage, for: .normal)
+            
+            // Gradient
+            cellImage.subviews.forEach { $0.removeFromSuperview() }
+            
+            cellImage.layoutIfNeeded()
+            let gradientContainerView = UIView(frame: cellImage.bounds)
+            
+            let gradient = CAGradientLayer()
+            gradient.frame = CGRect(x: 0,
+                                    y: model.imageHeight - 30,
+                                    width: gradientContainerView.bounds.width,
+                                    height: 30)
+            gradient.colors = [UIColor.ypBlack.withAlphaComponent(0.2).cgColor,
+                               UIColor.ypBlack.withAlphaComponent(0).cgColor]
+            gradient.startPoint = CGPoint(x: 0.5, y: 1)
+            gradient.endPoint = CGPoint(x: 0.5, y: 0)
+            gradient.locations = [0.6, 0.9]
+            
+            gradientContainerView.layer.insertSublayer(gradient, at: 0)
+            
+            cellImage.addSubview(gradientContainerView)
+        }
+    }
+    
+    func setIsLiked(_ isLiked: Bool) {
+        let buttonImage = UIImage(named: isLiked ? "LikeOn" : "LikeOff")
         likeButton.setImage(buttonImage, for: .normal)
-        
-        // Gradient
-        cellImage.subviews.forEach { $0.removeFromSuperview() }
-        
-        cellImage.layoutIfNeeded()
-        let gradientContainerView = UIView(frame: cellImage.bounds)
-        
-        let gradient = CAGradientLayer()
-        gradient.frame = CGRect(x: 0,
-                                y: model.imageHeight - 30,
-                                width: gradientContainerView.bounds.width,
-                                height: 30)
-        gradient.colors = [UIColor.ypBlack.withAlphaComponent(0.2).cgColor,
-                           UIColor.ypBlack.withAlphaComponent(0).cgColor]
-        gradient.startPoint = CGPoint(x: 0.5, y: 1)
-        gradient.endPoint = CGPoint(x: 0.5, y: 0)
-        gradient.locations = [0.6, 0.9]
-        
-        gradientContainerView.layer.insertSublayer(gradient, at: 0)
-        
-        cellImage.addSubview(gradientContainerView)
     }
     
     // MARK: - Private Methods
@@ -104,6 +117,6 @@ final class ImagesListCell: UITableViewCell {
     
     @objc
     private func likeButtonDidTap() {
-        
+        delegate?.imageListCellDidTapLike(self)
     }
 }

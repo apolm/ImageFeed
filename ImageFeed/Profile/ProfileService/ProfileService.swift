@@ -49,6 +49,13 @@ final class ProfileService {
         task?.resume()
     }
     
+    func clearData() {
+        profile = nil
+        lastToken = nil
+        task?.cancel()
+        task = nil
+    }
+    
     private func profileRequest(token: String) -> URLRequest {
         let url = Constants.defaultBaseURL.appendingPathComponent("me")
         var request = URLRequest(url: url)

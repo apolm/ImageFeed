@@ -11,12 +11,20 @@ final class ImagesListViewController: UIViewController {
         table.delegate = self
         table.dataSource = self
         table.translatesAutoresizingMaskIntoConstraints = false
-        
+                
         return table
     }()
     
-    private let photosName = Array(0..<20).map{ "\($0)" }
+    private var photos: [Photo] = []
     private let edges = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+    private let imagesListService = ImagesListService.shared
+    private var imagesListServiceObserver: NSObjectProtocol?
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMMM YYYY"
+        return formatter
+    } ()
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -31,6 +39,15 @@ final class ImagesListViewController: UIViewController {
         view.backgroundColor = .ypBlack
         
         setupConstraints()
+        
+        imagesListServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                self?.updateTableViewAnimated()
+            }
+        
+        imagesListService.fetchPhotosNextPage()
     }
     
     // MARK: - Private Methods
@@ -43,31 +60,48 @@ final class ImagesListViewController: UIViewController {
         ])
     }
     
-    private func imageHeight(_ image: UIImage) -> CGFloat {
+   private func imageHeight(_ size: CGSize) -> CGFloat {
         let viewWidth = tableView.bounds.width - edges.left - edges.right
-        let scale = viewWidth / image.size.width
-        return image.size.height * scale
+        let scale = viewWidth / size.width
+        return size.height * scale
+    }
+    
+    private func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        if oldCount < newCount {
+            photos.append(contentsOf: imagesListService.photos.suffix(from: oldCount))
+            
+            tableView.performBatchUpdates {
+                let indexPaths = (oldCount..<newCount).map { i in
+                    IndexPath(row: i, section: 0)
+                }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } completion: { _ in }
+        }
     }
 }
 
 // MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
+        let photo = photos[indexPath.row]
         
         guard let imageListCell = cell as? ImagesListCell,
-              let image = UIImage(named: photosName[indexPath.row]) else {
+              let url = URL(string: photo.regularImageURL) else {
             return UITableViewCell()
         }
+        imageListCell.delegate = self
         
-        let viewModel = ImagesListCellViewModel(image: image,
-                                                imageHeight: imageHeight(image),
-                                                isFavorite: indexPath.row % 2 == 0,
-                                                date: Date())
+        let viewModel = ImagesListCellViewModel(url: url,
+                                                imageHeight: imageHeight(photo.size),
+                                                isLiked: photo.isLiked,
+                                                date: photo.createdAt.map { dateFormatter.string(from: $0) } ?? "")
         imageListCell.config(with: viewModel)
         
         return imageListCell
@@ -77,19 +111,47 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let image = UIImage(named: photosName[indexPath.row])
+        let photo = photos[indexPath.row]
         
         let viewController = SingleImageViewController()
-        viewController.image = image
+        viewController.imageUrl = photo.fullImageURL
         viewController.modalPresentationStyle = .fullScreen
         
         present(viewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return 0
+        let photo = photos[indexPath.row]
+        return imageHeight(photo.size) + edges.top + edges.bottom
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == imagesListService.photos.count {
+            imagesListService.fetchPhotosNextPage()
         }
-        return imageHeight(image) + edges.top + edges.bottom
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success:
+                self.photos[indexPath.row].isLiked.toggle()
+                cell.setIsLiked(self.photos[indexPath.row].isLiked)
+            case .failure(let error):
+                ErrorHandler.printError(error, origin: "ImagesListService.changeLike")
+            }
+        }
     }
 }

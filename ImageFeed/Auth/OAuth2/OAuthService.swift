@@ -44,7 +44,7 @@ final class OAuthService {
         task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
             case .success(let responseBody):
-                let isSuccess = OAuthTokenStorage().setToken(responseBody.accessToken)
+                let isSuccess = OAuthTokenStorage.shared.setToken(responseBody.accessToken)
                 if isSuccess {
                     completion(.success(responseBody.accessToken))
                 } else {

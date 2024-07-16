@@ -1,8 +1,8 @@
 import UIKit
 
 struct ImagesListCellViewModel {
-    let image: UIImage
+    let url: URL
     let imageHeight: CGFloat
-    let isFavorite: Bool
-    let date: Date
+    let isLiked: Bool
+    let date: String
 }
