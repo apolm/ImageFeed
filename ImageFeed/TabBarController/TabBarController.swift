@@ -11,12 +11,15 @@ final class TabBarController: UITabBarController {
             selectedImage: nil
         )
         
+        let profilePresenter = ProfilePresenter()
         let profileViewController = ProfileViewController()
+        profileViewController.presenter = profilePresenter
         profileViewController.tabBarItem = UITabBarItem(
             title: "",
             image: UIImage(named: "TabProfileActive"),
             selectedImage: nil
         )
+        profilePresenter.view = profileViewController
         
         viewControllers = [imagesListViewController, profileViewController]
         
