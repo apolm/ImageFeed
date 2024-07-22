@@ -1,8 +1,6 @@
 import UIKit
 
-import Foundation
-
-protocol ImagesListPresenterProtocol: AnyObject {
+public protocol ImagesListPresenterProtocol: AnyObject {
     var view: ImagesListViewControllerProtocol? { get set }
     var photos: [Photo] { get }
     
@@ -22,13 +20,17 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     private(set) var photos: [Photo] = []
     
     private let edges = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
-    private let imagesListService = ImagesListService.shared
+    private let imagesListService: ImagesListServiceProtocol
     private var imagesListServiceObserver: NSObjectProtocol?
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM YYYY"
         return formatter
     }()
+    
+    init(imagesListService: ImagesListServiceProtocol = ImagesListService.shared) {
+        self.imagesListService = imagesListService
+    }
     
     // MARK: - ImagesListPresenterProtocol
     func viewDidLoad() {

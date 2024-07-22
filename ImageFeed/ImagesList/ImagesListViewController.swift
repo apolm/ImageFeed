@@ -1,6 +1,6 @@
 import UIKit
 
-protocol ImagesListViewControllerProtocol: AnyObject {
+public protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListPresenterProtocol? { get set }
     var tableWidth: CGFloat { get }
     
@@ -16,7 +16,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     }
     
     // MARK: - Private Properties
-    private lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
         table.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)

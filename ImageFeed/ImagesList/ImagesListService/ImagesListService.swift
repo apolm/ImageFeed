@@ -1,5 +1,11 @@
 import UIKit
 
+public protocol ImagesListServiceProtocol {
+    var photos: [Photo] { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
+}
+
 enum ImagesListServiceError: Error, LocalizedError {
     case failedToCreatePhotosRequest
     case failedToCreateLikeRequest
@@ -14,7 +20,7 @@ enum ImagesListServiceError: Error, LocalizedError {
     }
 }
 
-final class ImagesListService {
+final class ImagesListService: ImagesListServiceProtocol {
     static let shared = ImagesListService()
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
