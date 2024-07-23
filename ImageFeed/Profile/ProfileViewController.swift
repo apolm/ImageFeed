@@ -21,6 +21,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     private lazy var logoutButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "Logout"), for: .normal)
+        button.accessibilityIdentifier = "Logout"
         button.addTarget(self, action: #selector(Self.logoutButtonDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

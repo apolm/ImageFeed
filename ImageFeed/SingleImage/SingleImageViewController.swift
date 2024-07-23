@@ -29,6 +29,7 @@ final class SingleImageViewController: UIViewController {
     private lazy var backwardButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "Backward"), for: .normal)
+        button.accessibilityIdentifier = "Backward"
         button.addTarget(self, action: #selector(Self.backwardButtonDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
