@@ -1,5 +1,9 @@
 import UIKit
 
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+}
+
 enum ProfileServiceError: Error, LocalizedError {
     case repeatedProfileRequest
     
@@ -11,7 +15,7 @@ enum ProfileServiceError: Error, LocalizedError {
     }
 }
 
-final class ProfileService {
+final class ProfileService: ProfileServiceProtocol {
     static let shared = ProfileService()
     
     private(set) var profile: Profile?

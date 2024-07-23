@@ -1,7 +1,7 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     // MARK: - Private Properties
     private lazy var cellImage: UIImageView = {
         let image = UIImageView()
@@ -50,7 +50,7 @@ final class ImagesListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
+    override public func prepareForReuse() {
         super.prepareForReuse()
         cellImage.kf.cancelDownloadTask()
         cellImage.image = nil

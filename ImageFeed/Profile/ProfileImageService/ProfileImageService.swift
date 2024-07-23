@@ -1,5 +1,9 @@
 import UIKit
 
+protocol ProfileImageServiceProtocol {
+    var avatarURL: String? { get }
+}
+
 enum ProfileImageServiceError: Error, LocalizedError {
     case repeatedProfileImageRequest
     
@@ -11,7 +15,7 @@ enum ProfileImageServiceError: Error, LocalizedError {
     }
 }
 
-final class ProfileImageService {
+final class ProfileImageService: ProfileImageServiceProtocol {
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     

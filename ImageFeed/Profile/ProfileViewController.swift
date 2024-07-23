@@ -1,9 +1,19 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateProfile(name: String, login: String, bio: String?)
+    func updateAvatar(url: URL)
+    func presentAlert(_ alert: UIAlertController)
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+    // MARK: - Public Properties
+    var presenter: ProfilePresenterProtocol?
+    
     // MARK: - Private Properties
-    private lazy var avatarImage: UIImageView = {
+    lazy var avatarImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "StubAvatar"))
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
@@ -11,25 +21,26 @@ final class ProfileViewController: UIViewController {
     private lazy var logoutButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "Logout"), for: .normal)
+        button.accessibilityIdentifier = "Logout"
         button.addTarget(self, action: #selector(Self.logoutButtonDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    private lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .ypWhite
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    private lazy var loginLabel: UILabel = {
+    lazy var loginLabel: UILabel = {
         let label = UILabel()
         label.textColor = .ypGray
         label.font = UIFont.systemFont(ofSize: 13)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    private lazy var descriptionLabel: UILabel = {
+    lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .ypWhite
         label.font = UIFont.systemFont(ofSize: 13)
@@ -37,11 +48,6 @@ final class ProfileViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
-    private var logoutService = ProfileLogoutService.shared
     
     // MARK: - Overridden Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -61,18 +67,25 @@ final class ProfileViewController: UIViewController {
         
         setupConstraints()
         
-        if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
-        }
-        
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main) { [weak self] _ in
-                guard let self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
+        presenter?.viewDidLoad()
+    }
+    
+    // MARK: - ProfileViewControllerProtocol
+    func updateProfile(name: String, login: String, bio: String?) {
+        nameLabel.text = name
+        loginLabel.text = login
+        descriptionLabel.text = bio
+    }
+    
+    func updateAvatar(url: URL) {
+        avatarImage.kf.setImage(with: url,
+                                placeholder: UIImage(named: "StubAvatar"),
+                                options: [.processor(RoundCornerImageProcessor(cornerRadius: 61)),
+                                          .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+    }
+    
+    func presentAlert(_ alert: UIAlertController) {
+        self.present(alert, animated: true)
     }
     
     // MARK: - Private Methods
@@ -99,44 +112,8 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    private func updateProfileDetails(profile: Profile) {
-        nameLabel.text = profile.name
-        loginLabel.text = profile.loginName
-        if let bio = profile.bio {
-            descriptionLabel.text = bio
-        }
-    }
-    
-    private func updateAvatar() {
-        guard let avatarURL = profileImageService.avatarURL,
-              let url = URL(string: avatarURL) else { return }
-        
-        let processor = RoundCornerImageProcessor(cornerRadius: 61)
-        avatarImage.kf.setImage(with: url,
-                                placeholder: UIImage(named: "StubAvatar"),
-                                options: [.processor(processor),
-                                          .cacheSerializer(FormatIndicatedCacheSerializer.png)])
-    }
-    
     @objc
     private func logoutButtonDidTap() {
-        let alertController = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены что хотите выйти?",
-            preferredStyle: .alert
-        )
-        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            self?.logoutService.logout()
-            
-            if let window = UIApplication.shared.windows.first {
-                window.rootViewController = SplashViewController()
-            }
-        }
-        alertController.addAction(yesAction)
-        
-        let noAction = UIAlertAction(title: "Нет", style: .default)
-        alertController.addAction(noAction)
-        
-        self.present(alertController, animated: true)
+        presenter?.logout()
     }
 }
